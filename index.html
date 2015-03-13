@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Developing Data Products Course Project</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Developing Data Products Course Project">
+  <meta name="author" content="George Li">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="./libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="./libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="./libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="./libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="./libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="./libraries/frameworks/io2012/js/slides" 
+    src="./libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Developing Data Products Course Project</h1>
+    <h2>Shiny App Presentation with Slidify</h2>
+    <p>George Li<br/></p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Shiny App Introduction</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>This simple shiny app uses two regression models to predict the duration of eruption time for the famous Old Faithful geyser in Yellowstone National Park.   </p>
+
+<ul>
+<li>simple linear regression model (lm)<br></li>
+<li>random forest<br></li>
+</ul>
+
+<p>The regression model uses the dataset <strong>faithful</strong> from  <strong>caret</strong> library with 272 observations. The dataset is partitioned with 70% as train dataset and 30% as test dataset.</p>
+
+<pre><code class="r">library(caret); library(randomForest); set.seed(12345)
+inTrain &lt;- createDataPartition(y=faithful$waiting, p=0.70, list=FALSE)
+trainFaith &lt;- faithful[inTrain, ]
+testFaith &lt;- faithful[-inTrain, ]
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>Model&#39;s Test Set Error Comparison</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Root mean squared error (RMSE) on test set of Linear Regression Model (lm)</li>
+</ul>
+
+<pre><code class="r">model1 &lt;- lm(eruptions ~ waiting, data=trainFaith)
+prediction1 &lt;- predict(model1, newdata=testFaith)
+sqrt(sum((prediction1 - testFaith$eruptions)^2))
+</code></pre>
+
+<pre><code>## [1] 4.571707
+</code></pre>
+
+<ul>
+<li>Root mean squared error (RMSE) on test set of randomForest Model</li>
+</ul>
+
+<pre><code class="r">model2 &lt;- randomForest(eruptions ~ waiting, data=trainFaith)
+prediction2 &lt;- predict(model2, newdata=testFaith)
+sqrt(sum((prediction2 - testFaith$eruptions)^2))
+</code></pre>
+
+<pre><code>## [1] 3.700957
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Develop and Deploy the Shiny App</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The following packages and libraries are needed to develop and run the app 
+
+<ul>
+<li>library(shiny)<br></li>
+<li>library(devtools)<br></li>
+<li>library(shinyapps)<br></li>
+<li>library(caret)<br></li>
+<li>library(randomForest)<br></li>
+</ul></li>
+<li>Ceate two R files <code>ui.R</code> and <code>server.R</code> in the same directory<br></li>
+<li>Run command <code>runApp()</code> in the directory to debug the app</li>
+<li>Run command <code>deployApp()</code> to deploy the Shiny app to Shinyapps.io site at <a href="http://georgeli88.shinyapps.io/oldfaithful">http://georgeli88.shinyapps.io/oldfaithful</a></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>How to Use the App</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img class=center src=./assets/img/Oldfaithful_ShinyApp.png height=300></p>
+
+<ul>
+<li>Enter a positive number for the waiting time on <a href="http://georgeli88.shinyapps.io/oldfaithful">http://georgeli88.shinyapps.io/oldfaithful</a></li>
+<li>Select the regression model, &quot;lm&quot; or &quot;randomForest&quot;<br></li>
+<li>Click &quot;Submit&quot; button<br></li>
+<li>The predicted eruption time is displayed in the main panel<br></li>
+<li>If an non-positive number is entered, a warning message is displayed in the main panel </li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Shiny App Introduction'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Model&#39;s Test Set Error Comparison'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Develop and Deploy the Shiny App'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='How to Use the App'>
+         4
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="./libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+<!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="./libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
